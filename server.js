@@ -1,4 +1,5 @@
-const app = require("express")()
+const express = require("express")
+const app = express()
 const http = require("http")
 const socketio = require("socket.io")
 const server = http.createServer(app)
@@ -10,6 +11,15 @@ const {
   getUser,
   getUsersInRoom
 } = require("./usersOnline")
+
+// serve static assets in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"))
+
+  app.get("*", (req, res) =>
+    res.sendfile(path.resolve(__dirname, "client", "build", "index.html"))
+  )
+}
 
 io.on("connection", socket => {
   socket.on("join", ({ name, room }, callback) => {
@@ -47,15 +57,6 @@ io.on("connection", socket => {
     }
   })
 })
-
-// serve static assets in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"))
-
-  app.get("*", (req, res) =>
-    res.sendfile(path.resolve(__dirname, "client", "build", "index.html"))
-  )
-}
 
 const PORT = process.env.PORT || 5000
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`))
