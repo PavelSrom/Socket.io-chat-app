@@ -14,7 +14,7 @@ const Chat = ({ location }) => {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
-  const endpoint = "192.168.0.102:5000"
+  const endpoint = "https://blooming-refuge-48922.herokuapp.com/"
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search)
